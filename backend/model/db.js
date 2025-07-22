@@ -13,6 +13,20 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, minLength: 6, maxLength: 30 },
 });
 
-const User = mongoose.model("User", userSchema);
+const productSchema = new mongoose.Schema({
+  productName: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  ProductImgUrl: { type: String, required: true },
+  category: {
+    type: String,
+    enum: ["SEASONARRIVALS", "RETRO", "SPECIALCOLLECTION"],
+    required: true,
+  },
+  stock: { type: Number, required: true },
+});
 
-module.exports = { User };
+const User = mongoose.model("User", userSchema);
+const Product = mongoose.model("Product", productSchema);
+
+module.exports = { User, Product };
