@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-function userAuthentication(req, res, next) {
+function Authentication(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
 
@@ -15,13 +15,29 @@ function userAuthentication(req, res, next) {
 
     const decodedValue = jwt.verify(jwtToken, JWT_SECRET);
 
-    if (decodedValue) {
-      req.user = decodedValue;
-      next();
+    const { userId, role } = decodedValue;
+
+    if (!role || !userId) {
+      return res.status(403).json({ msg: "Invalid Token Payload" });
     }
+
+    req.userRole = role;
+    req.user = { userId };
+    next();
   } catch (error) {
     return res.status(403).json({});
   }
 }
 
-module.exports = userAuthentication;
+function authorizeRole(expectedRole) {
+  return (req, res, next) => {
+    if (req.userRole !== expectedRole) {
+      return res
+        .status(403)
+        .json({ msg: "Access Denied: You are not authorized" });
+    }
+    next();
+  };
+}
+
+module.exports = { Authentication, authorizeRole };

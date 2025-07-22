@@ -7,6 +7,18 @@ userRouter.post("/signup", userController.signup);
 
 userRouter.post("/login", userController.login);
 
-userRouter.get("/profile", userAuthentication, userController.profile);
+userRouter.get(
+  "/profile",
+  userAuthentication.Authentication,
+  userAuthentication.authorizeRole("user"),
+  userController.profile
+);
+
+userRouter.put(
+  "/update",
+  userAuthentication.Authentication,
+  userAuthentication.authorizeRole("user"),
+  userController.updateProfile
+);
 
 module.exports = userRouter;

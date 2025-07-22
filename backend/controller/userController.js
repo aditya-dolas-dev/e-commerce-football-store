@@ -17,13 +17,15 @@ const signupSchema = zod.object({
     .max(30, "maximum password length should not exceed 30 character"),
 });
 
-///***********************Login POST METHOD******************8 */
+///***********************SIGNUP POST METHOD******************8 */
 
 const signup = async (req, res) => {
   const result = signupSchema.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(403).json({ message: "Fill the form properly " });
+    return res
+      .status(403)
+      .json({ msg: "Validation Failed", errors: result.error.format() });
   }
 
   const { firstname, lastname, email, password } = result.data;
@@ -43,7 +45,20 @@ const signup = async (req, res) => {
     password: password,
   });
 
-  return res.status(200).json({ newUser, message: "user created succesfully" });
+  // TOKEN CREATION USING JWT ON SIGNUP
+
+  const token = jwt.sign(
+    {
+      userId: newUser._id,
+      role: "user",
+    },
+    JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+
+  return res
+    .status(200)
+    .json({ newUser, token, message: "user created succesfully" });
 };
 
 ///***********************ZOD SCHEMA******************8 */
@@ -59,7 +74,9 @@ const login = async (req, res) => {
   const result = loginSchema.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(403).json({ message: "Invalid Input" });
+    return res
+      .status(403)
+      .json({ msg: "Validation Failed", errors: result.error.format() });
   }
 
   const { email, password } = result.data;
@@ -83,6 +100,7 @@ const login = async (req, res) => {
   const token = jwt.sign(
     {
       userId: user._id,
+      role: "user",
     },
     JWT_SECRET,
     { expiresIn: "2d" }
@@ -111,8 +129,49 @@ const profile = async (req, res) => {
   }
 };
 
+// update user profile
+
+const updateProfileSchema = zod.object({
+  firstname: zod.string().optional(),
+  lastname: zod.string().optional(),
+  password: zod
+    .string()
+    .min(6, "minimum password length atleast 6 characters")
+    .max(30, "maximum password length should not exceed 30 character")
+    .optional(),
+});
+
+// update profile method
+
+const updateProfile = async (req, res) => {
+  const userId = req.user.userId;
+
+  const result = updateProfileSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res
+      .status(400)
+      .json({ msg: "Validation Failed", errors: result.error.format() });
+  }
+
+  const { firstname, lastname, password } = result.data;
+
+  const updateProfile = await User.findByIdAndUpdate(
+    userId,
+    { firstname, lastname, password },
+    { new: true }
+  ).select("-email");
+
+  if (!updateProfile) {
+    return res.status(404).json({ msg: "User not found" });
+  }
+
+  return res.status(200).json({ updateProfile, message: "Profile updated" });
+};
+
 module.exports = {
   signup,
   login,
   profile,
+  updateProfile,
 };

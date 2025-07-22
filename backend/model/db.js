@@ -11,6 +11,15 @@ const userSchema = new mongoose.Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minLength: 6, maxLength: 30 },
+  role: { type: String, default: "user", enum: ["user"] },
+});
+
+const adminSchema = new mongoose.Schema({
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true, minLength: 6, maxLength: 30 },
+  role: { type: String, default: "admin", enum: ["admin"] },
 });
 
 const productSchema = new mongoose.Schema({
@@ -26,7 +35,8 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true },
 });
 
+const Admin = mongoose.model("Admin", adminSchema);
 const User = mongoose.model("User", userSchema);
 const Product = mongoose.model("Product", productSchema);
 
-module.exports = { User, Product };
+module.exports = { User, Product, Admin };
