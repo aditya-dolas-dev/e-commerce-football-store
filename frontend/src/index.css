@@ -1,0 +1,21 @@
+/* 1. Import Tailwind */
+@import "tailwindcss";
+
+/* 2. Add your font-face */
+@font-face {
+  font-family: 'Tavirs';
+  src: url('./assets//fonts/tavirs.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 3. Apply globally (optional) */
+body {
+  font-family: 'Tavirs', serif;
+}
+
+/* 4. Optional custom class */
+.font-taviraj {
+  font-family: 'Tavirs', serif;
+}
+
