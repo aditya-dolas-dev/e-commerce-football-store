@@ -1,21 +1,43 @@
 /* 1. Import Tailwind */
 @import "tailwindcss";
 
-/* 2. Add your font-face */
-@font-face {
-  font-family: 'Tavirs';
-  src: url('./assets//fonts/tavirs.otf') format('opentype');
-  font-weight: normal;
+
+/* 4. Apply font globally */
+body {
+  font-family: 'Bebas Neue', serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+ 
+}
+
+/* 5. Optional font utility classes */
+.font-tavirs {
+  font-family: 'Tavirs', serif;
+}
+
+.bebas-neue-regular {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.oswald {
+  font-family: 'Oswald', sans-serif;
+}
+.bebas-neue {
+  font-family: 'Bebas Neue', sans-serif;
+}
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
   font-style: normal;
 }
 
-/* 3. Apply globally (optional) */
-body {
-  font-family: 'Tavirs', serif;
-}
-
-/* 4. Optional custom class */
-.font-taviraj {
-  font-family: 'Tavirs', serif;
-}
+@font-face {
+  font-family: 'Tavirs';
+  src: url('./assets/fonts/tavirs.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}   
 

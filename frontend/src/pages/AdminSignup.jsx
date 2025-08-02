@@ -1,59 +1,49 @@
-import React, { useState } from "react";
+import React from "react";
 import ImageComponent from "../components/ImageComponent";
 import InputComponent from "../components/InputComponent";
-import imageUrl from "../assets/ruicosta.png";
-import axios from "axios";
+import imageUrl from "../assets/baggio.jpg";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import axios from "axios";
 
-const Signup = () => {
+const AdminSignup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/user/signup",
-        {
-          firstname,
-          lastname,
-          email,
-          password,
-        }
-      );
-
-      localStorage.setItem("token", response.data.token);
-
-      if (response.status === 200) {
-        navigate("/");
+    const response = await axios.post(
+      "http://localhost:3000/api/v1/admin/signup",
+      {
+        firstname,
+        lastname,
+        email,
+        password,
       }
-    } catch (error) {
-      console.error("Signup error:", error);
-      toast.error("Signup failed. Please try again.");
-    }
+    );
+
+    localStorage.setItem("token", response.data.token);
+    navigate("/");
   };
 
   return (
-    <div className="bg-purple-800 font-mono">
-      <div className="flex flex-col md:flex-row w-full h-screen border-[6px] border-purple-800 overflow-hidden rounded-2xl">
-        {/* Left Section */}
-        <section className="w-full md:w-1/2 h-[300px] md:h-full rounded-md">
+    <div className="bg-blue-800 font-mono">
+      <div className="flex flex-col md:flex-row w-full h-screen border-[6px] border-blue-800 overflow-hidden rounded-2xl ">
+        <section className="w-full md:w-1/2  h-[300px] md:h-full rounded-md">
           <ImageComponent url={imageUrl} size={"w-full h-full object-cover"} />
         </section>
-
-        {/* Right Section */}
-        <section className="w-full md:w-1/2 bg-white h-full flex items-center justify-center">
+        <section className="w-full md:w-1/2 bg-white h-full flex items-center justify-center ">
           <form
             className="flex flex-col gap-6 p-6 w-full max-w-[500px] rounded-lg"
             onSubmit={handleSubmit}
           >
             <h2 className="text-[23px] font-mono text-center mb-4 mt-4">
-              Create an account
+              Create an Business account
             </h2>
 
             {/* First Name */}
@@ -124,15 +114,14 @@ const Signup = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="bg-purple-700 rounded-4xl text-white py-2 px-4 mt-4 hover:bg-gray-800 transition"
+              className="bg-blue-700 rounded-4xl text-white py-2 px-4 mt-4  hover:bg-gray-800 transition"
             >
               Sign Up
             </button>
-
             {/* Login Link */}
             <p className="text-center text-sm text-gray-600 mt-2">
               Already have an account?{" "}
-              <a href="/login" className="text-blue-600 hover:underline">
+              <a href="/adminlogin" className="text-blue-600 hover:underline ">
                 Login
               </a>
             </p>
@@ -143,4 +132,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AdminSignup;

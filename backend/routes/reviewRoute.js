@@ -5,7 +5,7 @@ const userAuthentication = require("../middleware/userAuthentication");
 
 reviewRouter.post(
   "/addreview",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("user"),
   reviewRoute.createReview
 );

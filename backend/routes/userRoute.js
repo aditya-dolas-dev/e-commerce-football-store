@@ -9,16 +9,37 @@ userRouter.post("/login", userController.login);
 
 userRouter.get(
   "/profile",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("user"),
   userController.profile
 );
 
 userRouter.put(
   "/update",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("user"),
   userController.updateProfile
+);
+
+userRouter.post(
+  "/createAddress",
+  userAuthentication.authentication,
+  userAuthentication.authorizeRole("user"),
+  userController.addressCreate
+);
+
+userRouter.get(
+  "/fetchaddress",
+  userAuthentication.authentication,
+  userAuthentication.authorizeRole("user"),
+  userController.addressFetch
+);
+
+userRouter.put(
+  "/updateaddress/:id",
+  userAuthentication.authentication,
+  userAuthentication.authorizeRole("user"),
+  userController.addressUpdate
 );
 
 module.exports = userRouter;

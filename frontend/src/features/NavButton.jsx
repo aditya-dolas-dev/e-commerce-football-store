@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const NavButton = ({ buttonName }) => {
+const NavButton = ({ buttonName, color, text, border }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     if (buttonName === "Home") {
@@ -20,7 +20,7 @@ const NavButton = ({ buttonName }) => {
   return (
     <div>
       <button
-        className="text-white bg-gray-700 hover:bg-white hover:text-black rounded-2xl px-3 py-1  font-mono text-xl border-0 border-gray-500"
+        className={`px-4 py-0.5 mt-0 border-b-[5px] border-b-double border-t-[1px] border-l-[1px] border-r-[1px]  border-b-black rounded-full text-black transition ${text} ${color} ${border}`}
         onClick={handleClick}
       >
         {buttonName}

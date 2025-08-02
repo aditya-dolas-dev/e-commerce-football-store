@@ -9,21 +9,21 @@ adminRouter.post("/login", adminController.login);
 
 adminRouter.post(
   "/createproduct",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("admin"),
   adminController.createProduct
 );
 
 adminRouter.put(
   "/updateproduct/:id",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("admin"),
   adminController.updateProducts
 );
 
 adminRouter.delete(
   "/deleteproduct/:id",
-  userAuthentication.Authentication,
+  userAuthentication.authentication,
   userAuthentication.authorizeRole("admin"),
   adminController.deleteProduct
 );

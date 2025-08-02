@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-function Authentication(req, res, next) {
+function authentication(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
 
@@ -40,4 +40,4 @@ function authorizeRole(expectedRole) {
   };
 }
 
-module.exports = { Authentication, authorizeRole };
+module.exports = { authentication, authorizeRole };

@@ -1,13 +1,12 @@
 import React from "react";
 import ImageComponent from "../components/ImageComponent";
-import imageUrl from "../assets/maldini.jpg";
+import imageUrl from "../assets/vanbasten.jpg";
 import InputComponent from "../components/InputComponent";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
 
-const Login = () => {
+const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,25 +15,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/user/login",
-        {
-          email,
-          password,
-        }
-      );
-      localStorage.setItem("token", response.data.token);
+    const response = await axios.post(
+      "http://localhost:3000/api/v1/admin/login",
+      {
+        firstname,
+        lastname,
+        email,
+        password,
+      }
+    );
 
-      navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
-
-      return;
-    }
+    localStorage.setItem("token", response.data.token);
+    navigate("/");
   };
-
   return (
     <div className="bg-gray-800 font-mono">
       <div className="flex flex-col md:flex-row w-full h-screen border-[6px] border-gray-800 overflow-hidden rounded-2xl ">
@@ -45,12 +38,9 @@ const Login = () => {
           />
         </section>
         <section className="w-full md:w-1/2 bg-white h-full flex items-center justify-center ">
-          <form
-            className="flex flex-col gap-6 p-6 w-full max-w-[500px] rounded-lg"
-            onSubmit={handleSubmit}
-          >
+          <form className="flex flex-col gap-6 p-6 w-full max-w-[500px] rounded-lg">
             <h2 className="text-[23px] font-mono text-center mb-4 mt-4">
-              Login to your account
+              Login to your Business account
             </h2>
 
             {/* Email */}
@@ -94,7 +84,7 @@ const Login = () => {
             {/* Login Link */}
             <p className="text-center text-sm text-gray-600 mt-2">
               i don't have an account?{" "}
-              <a href="/signup" className="text-blue-600 hover:underline ">
+              <a href="/adminsignup" className="text-blue-600 hover:underline ">
                 create an account
               </a>
             </p>
@@ -104,4 +94,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default AdminLogin;

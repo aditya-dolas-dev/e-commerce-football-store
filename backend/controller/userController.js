@@ -1,5 +1,6 @@
 const zod = require("zod");
 const { User } = require("../model/db");
+const { Address } = require("../model/db");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -169,9 +170,129 @@ const updateProfile = async (req, res) => {
   return res.status(200).json({ updateProfile, message: "Profile updated" });
 };
 
+/**************Address -controller--**************/
+
+const addressZodSchema = zod.object({
+  fullName: zod.string(),
+  street: zod.string(),
+  city: zod.string(),
+  state: zod.string(),
+  zipCode: zod.string(),
+  country: zod.string(),
+  phone: zod.string(),
+});
+
+const addressCreate = async (req, res) => {
+  const result = addressZodSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res
+      .status(400)
+      .json({ msg: "Validation Failed", errors: result.error.format() });
+  }
+
+  try {
+    const { user, fullName, street, city, state, zipCode, country, phone } =
+      result.data;
+
+    const addressCount = await Address.countDocuments({ user });
+
+    if (addressCount >= 5) {
+      return res.status(400).json({
+        msg: "You can only add up to 5 addresses.",
+      });
+    }
+
+    const newAddess = await Address.create({
+      user: req.user.userId,
+      fullName,
+      street,
+      city,
+      zipCode,
+      state,
+      country,
+      phone,
+    });
+    res.status(201).json({ msg: "Address added successfully", newAddess });
+  } catch (error) {
+    res.status(400).json({ msg: "Error creating address", error: err });
+  }
+};
+
+// find all address of user using jwt token
+
+const addressFetch = async (req, res) => {
+  const user = req.user.userId;
+
+  try {
+    if (!user) {
+      return res.status(404).json({ msg: "user does not exist " });
+    }
+    const fetchaddress = await Address.find({ user });
+    if (!fetchaddress) {
+      return res.status(404).json({ msg: "No addresses found" });
+    }
+    res.status(200).json({
+      msg: "Fetching addresses successful",
+      addresses: fetchaddress,
+    });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ error, msg: "error while fetching addresses" });
+  }
+};
+
+// update address
+
+const addressUpdateSchema = zod.object({
+  fullName: zod.string().optional(),
+  street: zod.string().optional(),
+  city: zod.string().optional(),
+  state: zod.string().optional(),
+  zipCode: zod.string().optional(),
+  country: zod.string().optional(),
+  phone: zod.string().optional(),
+});
+
+const addressUpdate = async (req, res) => {
+  const addressId = req.params.id;
+  const result = addressUpdateSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res
+      .status(401)
+      .json({ msg: "Validation Failed", errors: result.error.format() });
+  }
+
+  const { fullName, street, city, state, country, zipCode, phone } =
+    result.data;
+
+  const updateAddress = await Address.findByIdAndUpdate(addressId, {
+    fullName,
+    street,
+    city,
+    state,
+    country,
+    zipCode,
+    phone,
+  });
+
+  if (!updateAddress) {
+    return res.status(404).json({ msg: "Address not found" });
+  }
+
+  return res
+    .status(200)
+    .json({ msg: "address updated succesfully ", updateAddress });
+};
+
 module.exports = {
   signup,
   login,
   profile,
   updateProfile,
+  addressCreate,
+  addressFetch,
+  addressUpdate,
 };
